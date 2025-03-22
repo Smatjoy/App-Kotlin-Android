@@ -14,7 +14,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mediaplayer.Mp3Adapter
 import java.io.File
 import java.io.FileFilter
 
@@ -30,9 +29,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mp3Adapter: Mp3Adapter
     private val mp3Files = mutableListOf<File>()
 
+    // Aggiungi il MediaPlayerManager
+    private lateinit var mediaPlayerManager: MediaPlayerManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Inizializza il MediaPlayerManager
+        mediaPlayerManager = MediaPlayerManager(this)
 
         initViews()
         setupRecyclerView()
@@ -50,10 +55,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        mp3Adapter = Mp3Adapter(mp3Files) { file ->
-            // Qui implementeremo la logica per riprodurre la canzone
-            Toast.makeText(this, "Riproduzione: ${file.name}", Toast.LENGTH_SHORT).show()
-        }
+        // Passa il MediaPlayerManager all'adapter
+        mp3Adapter = Mp3Adapter(mp3Files, mediaPlayerManager)
 
         rvSongs.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -129,12 +132,12 @@ class MainActivity : AppCompatActivity() {
         mp3Files.clear()
         mp3Files.addAll(musicFiles)
 
-        // Aggiorna l'adattatore
-        mp3Adapter = Mp3Adapter(mp3Files) { file ->
-            // Qui implementeremo la logica per riprodurre la canzone
-            Toast.makeText(this, "Riproduzione: ${file.name}", Toast.LENGTH_SHORT).show()
+        if (mp3Files.isEmpty()) {
+            Toast.makeText(this, "Nessun file MP3 trovato", Toast.LENGTH_SHORT).show()
         }
-        rvSongs.adapter = mp3Adapter
+
+        // Notifica l'adapter che i dati sono cambiati
+        mp3Adapter.notifyDataSetChanged()
     }
 
     private fun searchForMp3Files(directory: File): List<File> {
@@ -160,5 +163,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         return mp3FileList
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Rilascia le risorse del MediaPlayer quando l'attività viene distrutta
+        mediaPlayerManager.release()
     }
 }
