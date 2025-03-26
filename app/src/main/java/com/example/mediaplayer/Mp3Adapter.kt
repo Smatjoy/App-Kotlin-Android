@@ -3,12 +3,13 @@ package com.example.mediaplayer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 
 class Mp3Adapter(
-    private val mp3Files: List<File>,
+    private val songs: List<Song>,
     private val mediaPlayerManager: MediaPlayerManager
 ) : RecyclerView.Adapter<Mp3Adapter.Mp3ViewHolder>() {
 
@@ -17,6 +18,9 @@ class Mp3Adapter(
 
     inner class Mp3ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val txtFileName: TextView = itemView.findViewById(R.id.txtFileName)
+        val txtArtist: TextView = itemView.findViewById(R.id.txtArtist)
+        val txtAlbum: TextView = itemView.findViewById(R.id.txtAlbum)
+        val imgAlbumArt: ImageView = itemView.findViewById(R.id.imgAlbumArt)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Mp3ViewHolder {
@@ -25,8 +29,17 @@ class Mp3Adapter(
     }
 
     override fun onBindViewHolder(holder: Mp3ViewHolder, position: Int) {
-        val file = mp3Files[position]
-        holder.txtFileName.text = file.name
+        val song = songs[position]
+        holder.txtFileName.text = song.title
+        holder.txtArtist.text = song.artist
+        holder.txtAlbum.text = song.album
+
+        // Imposta la cover dell'album se disponibile, altrimenti usa l'icona predefinita
+        if (song.albumArt != null) {
+            holder.imgAlbumArt.setImageBitmap(song.albumArt)
+        } else {
+            holder.imgAlbumArt.setImageResource(R.drawable.default_album_art)
+        }
 
         // Evidenzia l'elemento attualmente in riproduzione
         if (position == currentPlayingPosition && mediaPlayerManager.isPlaying()) {
@@ -51,11 +64,11 @@ class Mp3Adapter(
                 }
 
                 // Riproduci il file e aggiorna l'elemento corrente
-                mediaPlayerManager.play(file)
+                mediaPlayerManager.playFromUri(song.uri)
                 notifyItemChanged(position)
             }
         }
     }
 
-    override fun getItemCount(): Int = mp3Files.size
+    override fun getItemCount(): Int = songs.size
 }

@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvNoPermission: TextView
     private lateinit var btnRequestPermission: Button
     private lateinit var mp3Adapter: Mp3Adapter
-    private val mp3Files = mutableListOf<File>()
+    private val mp3Files = mutableListOf<Song>()
 
     // Aggiungi il MediaPlayerManager
     private lateinit var mediaPlayerManager: MediaPlayerManager
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        // Passa il MediaPlayerManager all'adapter
+        // The adapter receives a list of Song objects
         mp3Adapter = Mp3Adapter(mp3Files, mediaPlayerManager)
 
         rvSongs.apply {
@@ -126,17 +126,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadMp3Files() {
-        // Ottieni tutti i file MP3 dalla memoria esterna
+        // Get all MP3 files from external storage
         val musicFiles = searchForMp3Files(Environment.getExternalStorageDirectory())
 
+        // Convert File objects to Song objects
+        val songList = musicFiles.map { file ->
+            Mp3MetadataExtractor.extractMetadata(this, file)
+        }
+
         mp3Files.clear()
-        mp3Files.addAll(musicFiles)
+        mp3Files.addAll(songList)
 
         if (mp3Files.isEmpty()) {
             Toast.makeText(this, "Nessun file MP3 trovato", Toast.LENGTH_SHORT).show()
         }
 
-        // Notifica l'adapter che i dati sono cambiati
+        // Notify the adapter that data has changed
         mp3Adapter.notifyDataSetChanged()
     }
 

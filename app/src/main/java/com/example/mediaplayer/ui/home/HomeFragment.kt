@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mediaplayer.MediaPlayerManager
 import com.example.mediaplayer.Mp3Adapter
+import com.example.mediaplayer.Mp3MetadataExtractor
+import com.example.mediaplayer.Song
 import com.example.mediaplayer.databinding.FragmentHomeBinding
 import java.io.File
 import java.io.FileFilter
@@ -29,7 +31,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var mp3Adapter: Mp3Adapter
-    private val mp3Files = ArrayList<File>()
+    private val mp3Files = ArrayList<Song>()
     private lateinit var mediaPlayerManager: MediaPlayerManager
 
     override fun onCreateView(
@@ -101,7 +103,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        // Crea l'adapter con MediaPlayerManager
+        // The adapter receives a list of Song objects
         mp3Adapter = Mp3Adapter(mp3Files, mediaPlayerManager)
 
         binding.recyclerView.apply {
@@ -111,11 +113,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun loadMp3Files() {
-        // Ottieni tutti i file MP3 dalla memoria esterna
+        // Get all MP3 files from external storage
         val musicFiles = searchForMp3Files(Environment.getExternalStorageDirectory())
 
+        // Convert File objects to Song objects
+        val songList = musicFiles.map { file ->
+            Mp3MetadataExtractor.extractMetadata(requireContext(), file)
+        }
+
         mp3Files.clear()
-        mp3Files.addAll(musicFiles)
+        mp3Files.addAll(songList)
 
         if (mp3Files.isEmpty()) {
             Toast.makeText(
@@ -125,7 +132,7 @@ class HomeFragment : Fragment() {
             ).show()
         }
 
-        // Notifica l'adapter che i dati sono cambiati
+        // Notify the adapter that data has changed
         mp3Adapter.notifyDataSetChanged()
     }
 

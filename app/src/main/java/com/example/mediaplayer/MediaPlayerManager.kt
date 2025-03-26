@@ -10,6 +10,7 @@ class MediaPlayerManager(private val context: Context) {
 
     private var mediaPlayer: MediaPlayer? = null
     private var currentFile: File? = null
+    private var currentUri: Uri? = null
     private var isPaused = false
 
     fun play(file: File) {
@@ -44,6 +45,51 @@ class MediaPlayerManager(private val context: Context) {
                 prepareAsync()
             }
             currentFile = file
+            currentUri = Uri.fromFile(file)
+
+        } catch (e: Exception) {
+            Toast.makeText(
+                context,
+                "Errore: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
+            e.printStackTrace()
+        }
+    }
+
+    fun playFromUri(uri: Uri) {
+        // Se è già in riproduzione, ferma
+        if (mediaPlayer?.isPlaying == true) {
+            stop()
+        }
+
+        try {
+            // Se è lo stesso URI e in pausa, riprendi
+            if (isPaused && uri == currentUri) {
+                mediaPlayer?.start()
+                isPaused = false
+                return
+            }
+
+            // Inizializza un nuovo MediaPlayer
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(context, uri)
+                setOnPreparedListener { mp ->
+                    mp.start()
+                    isPaused = false
+                }
+                setOnErrorListener { _, what, extra ->
+                    Toast.makeText(
+                        context,
+                        "Errore di riproduzione: $what, $extra",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    true
+                }
+                prepareAsync()
+            }
+            currentUri = uri
+            currentFile = null  // Reset the file reference since we're using URI directly
 
         } catch (e: Exception) {
             Toast.makeText(
@@ -84,6 +130,7 @@ class MediaPlayerManager(private val context: Context) {
         }
         mediaPlayer = null
         currentFile = null
+        currentUri = null
         isPaused = false
     }
 

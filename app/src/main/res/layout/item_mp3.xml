@@ -15,15 +15,15 @@
         android:padding="12dp">
 
         <ImageView
-            android:id="@+id/imgMusicIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_music_note"
+            android:id="@+id/imgAlbumArt"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/default_album_art"
             android:contentDescription="@string/music_icon"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:tint="@color/blue" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
             android:id="@+id/txtFileName"
@@ -31,14 +31,42 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:textColor="@color/text"
             android:ellipsize="end"
             android:maxLines="1"
-            app:layout_constraintStart_toEndOf="@id/imgMusicIcon"
+            app:layout_constraintStart_toEndOf="@id/imgAlbumArt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="Example Song.mp3" />
+            tools:text="Song Title" />
+
+        <TextView
+            android:id="@+id/txtArtist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            android:textColor="@color/subtext0"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintStart_toEndOf="@id/imgAlbumArt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtFileName"
+            tools:text="Artist Name" />
+
+        <TextView
+            android:id="@+id/txtAlbum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="12sp"
+            android:textColor="@color/subtext1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintStart_toEndOf="@id/imgAlbumArt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtArtist"
+            tools:text="Album Name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
