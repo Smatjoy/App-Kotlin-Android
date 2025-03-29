@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
+//Main Activity Del Progetto
 class MainActivity : AppCompatActivity() {
 
     // MediaPlayerManager a livello di Activity, accessibile dai fragment
