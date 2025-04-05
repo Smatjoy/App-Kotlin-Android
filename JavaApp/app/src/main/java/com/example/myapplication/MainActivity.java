@@ -1,11 +1,23 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import android.Manifest;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,29 +35,100 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        initViewPager();
+        permission();
+    }
+    public static final int PERMISSION_REQUEST_CODE = 1;
+    ArrayList<MusicFiles> musicFiles;
+    // Utility function to check if the current Android version is at least a given version
+    public boolean isVersionAtLeast(int versionCode) {
+        return Build.VERSION.SDK_INT >= versionCode;
     }
 
-        private void initViewPager () {
-            ViewPager viewPager = findViewById(R.id.viewpager);
-            TabLayout tabLayout = findViewById(R.id.tab_layout);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+    private void permission() {
+        // Android 13+ (API 33 and above)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
 
-            // Add fragments to the adapter
-            viewPagerAdapter.addFragment(new SongFragment(), "Songs");
-            viewPagerAdapter.addFragment(new AlbumFragment(), "Albums");
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[] {
+                                Manifest.permission.READ_MEDIA_AUDIO,
+                                Manifest.permission.READ_MEDIA_IMAGES
+                        },
+                        PERMISSION_REQUEST_CODE // your request code
+                );
+            }
 
-            // Set the adapter to the ViewPager
-            viewPager.setAdapter(viewPagerAdapter);
-            // Connect the TabLayout with the ViewPager
-            tabLayout.setupWithViewPager(viewPager);
+            // Android 6 to 12 (API 23 to 32)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[] {
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        },
+                        PERMISSION_REQUEST_CODE // your request code
+                );
+            }
+
+            // Android 5 and below — no runtime permission required
+        } else {
+            // Permissions granted at install time
+            Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
+            musicFiles = getAllAudio(this);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //something
+            } else {
+                if (isVersionAtLeast(Build.VERSION_CODES.M)) {
+                    ActivityCompat.requestPermissions(
+                            this,
+                            new String[]{
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                            },
+                            PERMISSION_REQUEST_CODE // your request code
+                    );
+                } else if (isVersionAtLeast(Build.VERSION_CODES.TIRAMISU)) {
+                    ActivityCompat.requestPermissions(
+                            this,
+                            new String[]{
+                                    Manifest.permission.READ_MEDIA_AUDIO,
+                                    Manifest.permission.READ_MEDIA_IMAGES,
+                            },
+                            PERMISSION_REQUEST_CODE // your request code
+                    );
+                }
+            }
+        }
+    }
+
+
+    private void initViewPager () {
+        ViewPager viewPager = findViewById(R.id.viewpager);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        // Add fragments to the adapter
+        viewPagerAdapter.addFragment(new SongsFragment(), "Songs");
+        viewPagerAdapter.addFragment(new AlbumFragment(), "Albums");
+
+        // Set the adapter to the ViewPager
+        viewPager.setAdapter(viewPagerAdapter);
+        // Connect the TabLayout with the ViewPager
+        tabLayout.setupWithViewPager(viewPager);
+    }
     public static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final ArrayList<Fragment> fragments;
         private final ArrayList<String> titles;
@@ -76,5 +159,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public  static  ArrayList<MusicFiles> getAllAudio (Context context) {
+        ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {
+                MediaStore.Audio.Media.ALBUM,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.DATA, // for path
+                MediaStore.Audio.Media.ARTIST,
+
+        };
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String album = cursor.getString(0);
+                String title = cursor.getString(1);
+                String duration = cursor.getString(2);
+                String path = cursor.getString(3);
+                String artist = cursor.getString(4);
+
+                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
+                //Log.e For check
+                Log.e("Path: "+path, "Album: "+album);
+                tempAudioList.add(musicFiles);
+            }
+            cursor.close();
+        }
+        return tempAudioList;
+    }
 
 }
