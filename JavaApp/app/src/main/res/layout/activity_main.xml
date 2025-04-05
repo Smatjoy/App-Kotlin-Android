@@ -7,14 +7,8 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-<<<<<<< Updated upstream
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
-=======
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
->>>>>>> Stashed changes
         android:layout_height="wrap_content"
         android:background="@color/design_default_color_primary_dark"
         android:id="@+id/tab_layout"
@@ -22,29 +16,11 @@
         app:tabIndicatorGravity="center"
         app:tabTextColor="@color/colorAccent"
         app:tabIndicatorHeight="40dp"
-        app:tabindicatorColor="#009688"
+        app:tabIndicatorColor="#009688"
         app:tabIndicator="@drawable/tab_indicator"/>
 
-<<<<<<< Updated upstream
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/viewpager" />
 </LinearLayout>
-=======
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorFullWidth="true"
-        app:tabIndicatorGravity="center"
-        app:tabTextColor="@color/colorAccent" />
-    <androidx.viewpager.widget.ViewPager
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/viewpager"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
->>>>>>> Stashed changes

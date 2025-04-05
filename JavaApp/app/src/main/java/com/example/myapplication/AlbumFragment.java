@@ -59,11 +59,7 @@ public class AlbumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-<<<<<<< Updated upstream
         View view = inflater.inflate(R.layout.fragment_album, container, false);
-=======
-        View view =  inflater.inflate(R.layout.fragment_album, container, false);
->>>>>>> Stashed changes
         return view;
     }
 }
