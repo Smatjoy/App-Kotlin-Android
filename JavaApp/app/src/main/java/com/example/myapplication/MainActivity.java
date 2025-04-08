@@ -36,11 +36,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initViewPager();
         permission();
     }
     public static final int PERMISSION_REQUEST_CODE = 1;
-    ArrayList<MusicFiles> musicFiles;
+    static ArrayList<MusicFiles> musicFiles;
     // Utility function to check if the current Android version is at least a given version
     public boolean isVersionAtLeast(int versionCode) {
         return Build.VERSION.SDK_INT >= versionCode;
@@ -60,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
                         },
                         PERMISSION_REQUEST_CODE // your request code
                 );
+            } else {
+                // Permissions granted at install time
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
+                musicFiles = getAllAudio(this);
+                initViewPager();
+
             }
 
             // Android 6 to 12 (API 23 to 32)
@@ -75,13 +80,15 @@ public class MainActivity extends AppCompatActivity {
                         },
                         PERMISSION_REQUEST_CODE // your request code
                 );
+            } else {
+                // Permissions granted at install time
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
+                musicFiles = getAllAudio(this);
+                initViewPager();
+
             }
 
             // Android 5 and below — no runtime permission required
-        } else {
-            // Permissions granted at install time
-            Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
-            musicFiles = getAllAudio(this);
         }
     }
 
@@ -115,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Initialize viewpager
     private void initViewPager () {
+
         ViewPager viewPager = findViewById(R.id.viewpager);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -160,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  static  ArrayList<MusicFiles> getAllAudio (Context context) {
+        Log.e("Inside", "getAllAudio: ");
         ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {
@@ -172,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         };
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
+            Log.e("Cursor Check", "Count: " + cursor.getCount());
             while (cursor.moveToNext()) {
                 String album = cursor.getString(0);
                 String title = cursor.getString(1);
