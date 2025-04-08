@@ -59,7 +59,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             if (imageFile.exists()) {
                 Glide.with(mContext)
                         .load(imageFile)
-                        .override(300, 300)
+                        .override(75, 75)
                         .into(holder.album_art);
             } else {
                 // Fallback to default drawable
