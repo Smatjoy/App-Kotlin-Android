@@ -3,6 +3,7 @@ package com.example.myapplication;
 import static com.example.myapplication.MainActivity.musicFiles;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -68,6 +69,13 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                         .into(holder.album_art);
             }
             }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, PlayerActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
