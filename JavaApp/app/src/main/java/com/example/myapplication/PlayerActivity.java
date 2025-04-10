@@ -24,8 +24,8 @@ import java.util.ArrayList;
 
 public class PlayerActivity extends AppCompatActivity {
 
-    TextView song_name, artist_name, duration_played, duration_total, shuffleBtn;
-    ImageView cover_art, nextBtn, backBtn, repeatBtn, prevBtn;
+    TextView song_name, artist_name, duration_played, duration_total;
+    ImageView cover_art, nextBtn, backBtn, repeatBtn, prevBtn, shuffleBtn;
     FloatingActionButton playPauseBtn;
     SeekBar seekBar;
     int position = -1;
@@ -121,7 +121,7 @@ public class PlayerActivity extends AppCompatActivity {
         nextBtn = findViewById(R.id.id_next);
         prevBtn = findViewById(R.id.id_prev);
         backBtn = findViewById(R.id.back_btn);
-        //shuffleBtn = findViewById(R.id.id_shuffle);
+        shuffleBtn = findViewById(R.id.id_shuffle);
         repeatBtn = findViewById(R.id.id_repeat);
         playPauseBtn = findViewById(R.id.play_pause);
         seekBar = findViewById(R.id.seekBar);
