@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public static final int PERMISSION_REQUEST_CODE = 1;
     static ArrayList<MusicFiles> musicFiles;
+    static boolean shuffleBoolean = false, repeatBoolean = false;
     // Utility function to check if the current Android version is at least a given version
     public boolean isVersionAtLeast(int versionCode) {
         return Build.VERSION.SDK_INT >= versionCode;
@@ -178,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.DATA, // for path
                 MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media._ID
 
         };
         Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
@@ -189,8 +191,9 @@ public class MainActivity extends AppCompatActivity {
                 String duration = cursor.getString(2);
                 String path = cursor.getString(3);
                 String artist = cursor.getString(4);
+                String id = cursor.getString(5);
 
-                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
+                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration, id);
                 //Log.e For check
                 Log.e("Path: "+path, "Album: "+album);
                 tempAudioList.add(musicFiles);
