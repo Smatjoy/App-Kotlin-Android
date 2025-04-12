@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
                         .load(R.drawable.static_music)
                         .into(holder.album_image);
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, AlbumDetails.class);
+                    intent.putExtra("albumName", albumFiles.get(position).getAlbum());
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 
