@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERMISSION_REQUEST_CODE = 1;
     static ArrayList<MusicFiles> musicFiles;
     static boolean shuffleBoolean = false, repeatBoolean = false;
+
+    static ArrayList<MusicFiles> albums = new ArrayList<>();
     // Utility function to check if the current Android version is at least a given version
     public boolean isVersionAtLeast(int versionCode) {
         return Build.VERSION.SDK_INT >= versionCode;
@@ -170,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public  static  ArrayList<MusicFiles> getAllAudio (Context context) {
+        ArrayList<String> duplicate = new ArrayList<>();
         Log.e("Inside", "getAllAudio: ");
         ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
@@ -197,6 +200,10 @@ public class MainActivity extends AppCompatActivity {
                 //Log.e For check
                 Log.e("Path: "+path, "Album: "+album);
                 tempAudioList.add(musicFiles);
+                if (!duplicate.contains(album)) {
+                    albums.add(musicFiles);
+                    duplicate.add(album);
+                }
             }
             cursor.close();
         }

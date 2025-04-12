@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.AlbumDetailsAdapter.albumFiles;
 import static com.example.myapplication.MainActivity.musicFiles;
 import static com.example.myapplication.MainActivity.repeatBoolean;
 import static com.example.myapplication.MainActivity.shuffleBoolean;
@@ -356,6 +357,12 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
     private void getIntenMethod() {
         position = getIntent().getIntExtra("position", -1);
+        String sender = getIntent().getStringExtra("sender");
+        if (sender != null && sender.equals("albumDetails")) {
+            listSongs = albumFiles;
+        }else {
+            listSongs = albumFiles;
+        }
         listSongs = musicFiles;
         shuffledListSongs = FisherYatesShuffle.shuffle(listSongs);
         if (listSongs != null) {
