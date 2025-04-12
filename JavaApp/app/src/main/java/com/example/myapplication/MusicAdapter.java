@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     MusicAdapter(Context mContext, ArrayList<MusicFiles> mFiles) {
         this.mContext = mContext;
         this.mFiles = mFiles;
+
 
     }
 
@@ -135,7 +137,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             menuMore = itemView.findViewById(R.id.menuMore);
         }
     }
-    private byte[] getAlbumArt(String uri) throws IOException {
+    public static byte[] getAlbumArt(String uri) throws IOException {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource( uri);
         byte[] art = retriever.getEmbeddedPicture();

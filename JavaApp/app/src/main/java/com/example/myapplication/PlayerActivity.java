@@ -47,6 +47,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     static Uri uri;
     static MediaPlayer mediaPlayer;
     ArrayList<MusicFiles> listSongs = new ArrayList<>();
+    ArrayList<MusicFiles> shuffledListSongs = new ArrayList<>();
     private Handler handler = new Handler();
     private Thread playThread, prevThread, nextThread;
     @Override
@@ -150,10 +151,15 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     }
 
     private void prevBtnClicked() {
-        if(mediaPlayer.isPlaying()){
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
-            position = ((position - 1) < 0 ? (listSongs.size() - 1) : (position - 1));
+            if (shuffleBoolean) {
+                position = (shuffledListSongs.indexOf(listSongs.get(position)) - 1);
+                position = (position < 0) ? listSongs.size() - 1 : position;
+            } else {
+                position = ((position - 1) < 0 ? (listSongs.size() - 1) : (position - 1));
+            }
             uri = Uri.parse(listSongs.get(position).getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
             metaData(uri);
@@ -221,7 +227,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mediaPlayer.stop();
             mediaPlayer.release();
             if (shuffleBoolean && !repeatBoolean){
-                position = getRandom(listSongs.size() - 1);
+                position = (shuffledListSongs.indexOf(listSongs.get(position)) + 1) % shuffledListSongs.size(); //getRandom(listSongs.size() - 1);
             }else if (!shuffleBoolean && !repeatBoolean) {
                 position = ((position + 1) % listSongs.size());
             }
@@ -250,7 +256,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mediaPlayer.stop();
             mediaPlayer.release();
             if (shuffleBoolean && !repeatBoolean){
-                position = getRandom(listSongs.size() - 1);
+                position = (shuffledListSongs.indexOf(listSongs.get(position)) + 1) % shuffledListSongs.size();
             }else if (!shuffleBoolean && !repeatBoolean) {
                 position = ((position + 1) % listSongs.size());
             }
@@ -351,6 +357,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
     private void getIntenMethod() {
         position = getIntent().getIntExtra("position", -1);
         listSongs = musicFiles;
+        shuffledListSongs = FisherYatesShuffle.shuffle(listSongs);
         if (listSongs != null) {
             playPauseBtn.setImageResource(R.drawable.ic_pause);
             uri = Uri.parse(listSongs.get(position).getPath());
