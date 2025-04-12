@@ -135,7 +135,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             menuMore = itemView.findViewById(R.id.menuMore);
         }
     }
-    private byte[] getAlbumArt(String uri) throws IOException {
+    public static byte[] getAlbumArt(String uri) throws IOException {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource( uri);
         byte[] art = retriever.getEmbeddedPicture();
