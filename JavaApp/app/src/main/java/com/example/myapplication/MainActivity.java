@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     static boolean shuffleBoolean = false, repeatBoolean = false;
 
     static ArrayList<MusicFiles> albums = new ArrayList<>();
+    private String MY_SORT_PREF = "SortOrder";
     // Utility function to check if the current Android version is at least a given version
     public boolean isVersionAtLeast(int versionCode) {
         return Build.VERSION.SDK_INT >= versionCode;
@@ -178,11 +181,27 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    public  static  ArrayList<MusicFiles> getAllAudio (Context context) {
+    public  ArrayList<MusicFiles> getAllAudio (Context context)
+    {
+        SharedPreferences preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
+        String sortOrder = preferences.getString("sorting", "sortByName");
         ArrayList<String> duplicate = new ArrayList<>();
         Log.e("Inside", "getAllAudio: ");
+        albums.clear();
         ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
+        String order = null;
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        switch (sortOrder) {
+            case "sortByName":
+                order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
+                break;
+            case "sortByDate":
+                order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
+                break;
+            case "sortBySize":
+                order = MediaStore.MediaColumns.SIZE + " DESC";
+                break;
+        }
         String[] projection = {
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.TITLE,
@@ -190,12 +209,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 MediaStore.Audio.Media.DATA, // for path
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media._ID
-
         };
         String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
         //Warning Edit this for Music Filtering!!!
         String[] selectionArgs = new String[]{"%/Music/%"};
-        Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, order);
         if (cursor != null) {
             Log.e("Cursor Check", "Count: " + cursor.getCount());
             while (cursor.moveToNext()) {
@@ -246,5 +264,28 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
         SongsFragment.musicAdapter.updateList(myFiles);
         return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        SharedPreferences.Editor editor = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE).edit();
+        int id = item.getItemId();
+
+        if (id == R.id.by_name) {
+            editor.putString("sorting", "sortByName");
+            editor.apply();
+            this.recreate();
+        } else if (id == R.id.by_date) {
+            editor.putString("sorting", "sortByDate");
+            editor.apply();
+            this.recreate();
+        } else if (id == R.id.by_size) {
+            editor.putString("sorting", "sortBySize");
+            editor.apply();
+            this.recreate();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
