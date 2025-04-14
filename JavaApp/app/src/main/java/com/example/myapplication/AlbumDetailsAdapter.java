@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +41,13 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
     public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         holder.album_name.setText(albumFiles.get(position).getTitle());
         byte[] image = null;
+
+        for (int i = 0; i< albumFiles.size(); i++) {
+            Log.e("Album Files", albumFiles.get(i).getTitle() + " " + albumFiles.get(i));
+        }
+        //Get Image
         try {
-            image = MusicAdapter.getAlbumArt(albumFiles.get(position).getPath());
+            image = getAlbumArt(albumFiles.get(position).getPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,16 +72,17 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                         .load(R.drawable.static_music)
                         .into(holder.album_image);
             }
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, PlayerActivity.class);
-                    intent.putExtra("sender", "albumDetails");
-                    intent.putExtra("position", position);
-                    mContext.startActivity(intent);
-                }
-            });
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, PlayerActivity.class);
+                intent.putExtra("sender", "albumDetails");
+                intent.putExtra("position", position);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -92,5 +100,12 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
             album_name = view.findViewById(R.id.music_file_name);
 
         }
+    }
+    private byte[] getAlbumArt(String uri) throws IOException {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource( uri);
+        byte[] art = retriever.getEmbeddedPicture();
+        retriever.release();
+        return art;
     }
 }

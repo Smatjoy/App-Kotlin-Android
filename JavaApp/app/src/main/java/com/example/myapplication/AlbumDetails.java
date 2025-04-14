@@ -48,7 +48,7 @@ public class AlbumDetails extends AppCompatActivity {
         }
 
         for (int i = 0; i < albumSongs.size(); i++) {
-            Log.e("albumSongs", albumSongs.get(i).getTitle());
+            //Log.e("albumSongs", albumSongs.get(i).getTitle());
         }
 
         album_name = findViewById(R.id.album_name);
@@ -81,15 +81,15 @@ public class AlbumDetails extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (albumSongs.size() < 1){
+        if(true) {
+        //if (albumSongs.size() > 1) {
             albumDetailsAdapter = new AlbumDetailsAdapter(this, albumSongs);
             recyclerView.setAdapter(albumDetailsAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this,
-                    RecyclerView.VERTICAL, false));
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         }
     }
 
-    public static byte[] getAlbumArt(String uri) throws IOException {
+    private byte[] getAlbumArt(String uri) throws IOException {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource( uri);
         byte[] art = retriever.getEmbeddedPicture();

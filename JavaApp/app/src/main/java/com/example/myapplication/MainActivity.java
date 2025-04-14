@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         };
         String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
         //Warning Edit this for Music Filtering!!!
-        String[] selectionArgs = new String[]{"%/Music/Chaos/%"};
+        String[] selectionArgs = new String[]{"%/Music/%"};
         Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
         if (cursor != null) {
             Log.e("Cursor Check", "Count: " + cursor.getCount());

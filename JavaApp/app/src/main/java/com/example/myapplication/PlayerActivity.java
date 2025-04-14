@@ -361,9 +361,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if (sender != null && sender.equals("albumDetails")) {
             listSongs = albumFiles;
         }else {
-            listSongs = albumFiles;
+            listSongs = musicFiles;
         }
-        listSongs = musicFiles;
         shuffledListSongs = FisherYatesShuffle.shuffle(listSongs);
         if (listSongs != null) {
             playPauseBtn.setImageResource(R.drawable.ic_pause);
