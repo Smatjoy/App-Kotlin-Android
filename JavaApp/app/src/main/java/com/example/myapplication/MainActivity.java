@@ -185,7 +185,10 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media._ID
 
         };
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
+        String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
+        //Warning Edit this for Music Filtering!!!
+        String[] selectionArgs = new String[]{"%/Music/Chaos/%"};
+        Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
         if (cursor != null) {
             Log.e("Cursor Check", "Count: " + cursor.getCount());
             while (cursor.moveToNext()) {

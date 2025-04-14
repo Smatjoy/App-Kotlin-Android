@@ -4,7 +4,10 @@ import static com.example.myapplication.MainActivity.musicFiles;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -23,6 +26,7 @@ public class AlbumDetails extends AppCompatActivity {
 
     RecyclerView recyclerView;
     ImageView albumPhoto;
+    TextView album_name;
     String albumName;
 
     //Se il grena ha modificato questo modificate
@@ -42,6 +46,20 @@ public class AlbumDetails extends AppCompatActivity {
                 j++;
             }
         }
+
+        for (int i = 0; i < albumSongs.size(); i++) {
+            Log.e("albumSongs", albumSongs.get(i).getTitle());
+        }
+
+        album_name = findViewById(R.id.album_name);
+        if (!albumSongs.isEmpty()) {
+            album_name.setText(albumSongs.get(0).getAlbum());
+        } else {
+            album_name.setText("Unknown Album");
+        }
+
+
+
 
         byte[] image;
         try {
