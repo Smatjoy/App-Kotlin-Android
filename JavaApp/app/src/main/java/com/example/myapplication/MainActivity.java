@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         return Build.VERSION.SDK_INT >= versionCode;
     }
 
+    //ask For music and storage permmission
     private void permission() {
         // Android 13+ (API 33 and above)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
