@@ -15,6 +15,8 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -26,11 +28,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.widget.SearchView;
+
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
         // Connect the TabLayout with the ViewPager
         tabLayout.setupWithViewPager(viewPager);
     }
+
+
     public static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final ArrayList<Fragment> fragments;
         private final ArrayList<String> titles;
@@ -214,4 +220,31 @@ public class MainActivity extends AppCompatActivity {
         return tempAudioList;
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+        MenuItem menuItem = menu.findItem(R.id.search_option);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput = newText.toLowerCase();
+        ArrayList<MusicFiles> myFiles = new ArrayList<>();
+        for (MusicFiles song : musicFiles) {
+            if (song.getTitle().toLowerCase().contains(userInput)) {
+                myFiles.add(song);
+            }
+        }
+        SongsFragment.musicAdapter.updateList(myFiles);
+        return true;
+    }
 }

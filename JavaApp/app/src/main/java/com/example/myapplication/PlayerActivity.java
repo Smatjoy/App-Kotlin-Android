@@ -4,6 +4,7 @@ import static com.example.myapplication.AlbumDetailsAdapter.albumFiles;
 import static com.example.myapplication.MainActivity.musicFiles;
 import static com.example.myapplication.MainActivity.repeatBoolean;
 import static com.example.myapplication.MainActivity.shuffleBoolean;
+import static com.example.myapplication.MusicAdapter.mFiles;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -361,7 +362,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         if (sender != null && sender.equals("albumDetails")) {
             listSongs = albumFiles;
         }else {
-            listSongs = musicFiles;
+            listSongs = mFiles;
         }
         shuffledListSongs = FisherYatesShuffle.shuffle(listSongs);
         if (listSongs != null) {
