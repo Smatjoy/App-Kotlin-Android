@@ -13,6 +13,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.provider.MediaStore;
@@ -29,9 +30,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import android.widget.SearchView;
-
+import androidx.appcompat.widget.SearchView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -42,7 +41,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar == null) {
+            Log.e("ToolbarCheck", "Toolbar is null!");
+        } else {
+            Log.d("ToolbarCheck", "Toolbar found!");
+        }
+        setSupportActionBar(toolbar);
+
         permission();
+
     }
     public static final int PERMISSION_REQUEST_CODE = 1;
     static ArrayList<MusicFiles> musicFiles;
@@ -148,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         viewPager.setAdapter(viewPagerAdapter);
         // Connect the TabLayout with the ViewPager
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
 
@@ -210,10 +220,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media._ID
         };
+
+        //Da qua
         String selection = MediaStore.Audio.Media.DATA + " LIKE ?";
-        //Warning Edit this for Music Filtering!!!
+        //Warning Edit this for Music Filtering!!! ex. "%/Music/%"
         String[] selectionArgs = new String[]{"%/Music/%"};
-        Cursor cursor = context.getContentResolver().query(uri, projection, null, null, order);
+        Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, order);
+        //A qua non toccare nulla
+
         if (cursor != null) {
             Log.e("Cursor Check", "Count: " + cursor.getCount());
             while (cursor.moveToNext()) {
