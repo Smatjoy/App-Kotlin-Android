@@ -8,5 +8,7 @@
             </style>
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />
+
+    <!-- Devo cambiarlo da Base.Theme.MyApplication a Theme.AppCompat.Light.NoActionBar, altrimenti crasha-->
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.Light.NoActionBar" />
 </resources>
