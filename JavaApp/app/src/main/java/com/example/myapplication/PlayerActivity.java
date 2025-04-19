@@ -541,22 +541,23 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
     void showNotification(int playPauseBtn) {
         Intent intent = new Intent(this, PlayerActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_IMMUTABLE); //Il tutorial mette 0 al posto di FLAG_IMMUTABLE
+                PendingIntent.FLAG_MUTABLE);
 
         Intent prevIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PREVIOUS);
-        PendingIntent prevPending = PendingIntent.getActivity(this, 0, prevIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent prevPending = PendingIntent.getBroadcast(this, 0, prevIntent,
+                PendingIntent.FLAG_MUTABLE);
 
         Intent pauseIntent = new Intent(this, PlayerActivity.class)
                 .setAction(ACTION_PLAY);
         PendingIntent pausePending = PendingIntent.getBroadcast(this, 0, pauseIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT); //Il tutorial mette 0 al posto di FLAG_IMMUTABLE
+                PendingIntent.FLAG_MUTABLE);
 
         Intent nextIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PREVIOUS);
         PendingIntent nextPending = PendingIntent.getBroadcast(this, 0, nextIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_MUTABLE);
+
         byte[] picture = null;
         Bitmap thumb = null;
         try {
@@ -576,6 +577,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             e.printStackTrace();
             thumb = BitmapFactory.decodeResource(getResources(), R.drawable.static_music);
         }
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_2)
                 .setSmallIcon(playPauseBtn)
                 .setLargeIcon(thumb)
