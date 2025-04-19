@@ -176,7 +176,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         prevThread.start();
     }
 
-    private void prevBtnClicked() {
+    public void prevBtnClicked() {
         if (musicService.isPlaying()) {
             musicService.stop();
             musicService.release();
@@ -252,7 +252,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         nextThread.start();
     }
 
-    private void nextBtnClicked() {
+    public void nextBtnClicked() {
         if (musicService.isPlaying()) {
             musicService.stop();
             musicService.release();
@@ -337,7 +337,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         playThread.start();
     }
 
-    private void playPauseBtnClicked() {
+    public void playPauseBtnClicked() {
         if (musicService.isPlaying()) {
             playPauseBtn.setImageResource(R.drawable.ic_play);
             showNotification(R.drawable.ic_play);
@@ -507,25 +507,12 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         imageView.startAnimation(animOut);
     }
 
-    @Override
-    public void btn_play_pause_clicked() {
-
-    }
-
-    @Override
-    public void btn_next_clicked() {
-
-    }
-
-    @Override
-    public void btn_previous_clicked() {
-
-    }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         MusicService.MyBinder myBinder = (MusicService.MyBinder) service;
         musicService = myBinder.getService();
+        musicService.setCallBack(this);
         Toast.makeText(this, "connected" + musicService, Toast.LENGTH_SHORT).show();
         seekBar.setMax(musicService.getDuration() / 1000);
         metaData(uri);
