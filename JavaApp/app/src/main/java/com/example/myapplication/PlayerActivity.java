@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import static com.example.myapplication.AlbumDetailsAdapter.albumFiles;
+import static com.example.myapplication.ApplicationClass.ACTION_NEXT;
 import static com.example.myapplication.ApplicationClass.ACTION_PLAY;
 import static com.example.myapplication.ApplicationClass.ACTION_PREVIOUS;
 import static com.example.myapplication.ApplicationClass.CHANNEL_ID_2;
@@ -548,13 +549,13 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         PendingIntent prevPending = PendingIntent.getBroadcast(this, 0, prevIntent,
                 PendingIntent.FLAG_MUTABLE);
 
-        Intent pauseIntent = new Intent(this, PlayerActivity.class)
+        Intent pauseIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PLAY);
         PendingIntent pausePending = PendingIntent.getBroadcast(this, 0, pauseIntent,
                 PendingIntent.FLAG_MUTABLE);
 
         Intent nextIntent = new Intent(this, NotificationReceiver.class)
-                .setAction(ACTION_PREVIOUS);
+                .setAction(ACTION_NEXT);
         PendingIntent nextPending = PendingIntent.getBroadcast(this, 0, nextIntent,
                 PendingIntent.FLAG_MUTABLE);
 
@@ -562,7 +563,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         Bitmap thumb = null;
         try {
             // --- Try to get the album art ---
-            picture = getAlbumArt(musicFiles.get(position).getPath());
+            picture = getAlbumArt(listSongs.get(position).getPath());
             if (picture != null) {
                 thumb = BitmapFactory.decodeByteArray(picture, 0, picture.length);
             } else {
@@ -581,8 +582,8 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_2)
                 .setSmallIcon(playPauseBtn)
                 .setLargeIcon(thumb)
-                .setContentTitle(musicFiles.get(position).getTitle())
-                .setContentText(musicFiles.get(position).getArtist())
+                .setContentTitle(listSongs.get(position).getTitle())
+                .setContentText(listSongs.get(position).getArtist())
                 .addAction(R.drawable.ic_skip_previous, "Previous", prevPending)
                 .addAction(playPauseBtn, "Pause", pausePending)
                 .addAction(R.drawable.ic_skip_next, "Next", nextPending)
