@@ -7,6 +7,7 @@
     <!-- For reading audio files -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- For reading image files (album art, cover images) -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
