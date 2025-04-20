@@ -19,8 +19,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/viewpager" />
+        android:id="@+id/viewpager"
+        android:layout_alignBottom="@+id/frag_bottom_player"
+    />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/frag_bottom_player"
+        >
+        <fragment
+            android:name="com.example.myapplication.NowPlayingFragmentBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nowPlayingFragment"
+            tools:layout="@layout/fragment_now_playing_bottom"/>
 
+
+
+    </FrameLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"

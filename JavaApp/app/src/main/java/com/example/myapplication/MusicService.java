@@ -4,6 +4,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import androidx.core.app.NotificationCompat;
+import androidx.media.app.NotificationCompat.MediaStyle;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -197,10 +199,19 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .setContentTitle(musicFiles.get(position).getTitle())
                 .setContentText(musicFiles.get(position).getArtist())
                 .addAction(R.drawable.ic_skip_previous, "Previous", prevPending)
+
+                //.addAction(android.R.drawable.ic_media_pause, "Pause", pausePending)
                 .addAction(playPauseBtn, "Pause", pausePending)
                 .addAction(R.drawable.ic_skip_next, "Next", nextPending)
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setMediaSession(mediaSessionCompat.getSessionToken()))
+
+                //.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+                //.setMediaSession(mediaSessionCompat.getSessionToken()))
+                        //.setShowActionsInCompactView(0, 1, 2)
+
+                .setStyle(new MediaStyle()
+                        .setMediaSession(mediaSessionCompat.getSessionToken())
+                        .setShowActionsInCompactView(0, 1, 2))
+
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)

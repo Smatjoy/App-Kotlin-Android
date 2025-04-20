@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -29,13 +30,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView; // **Crucially, import the AppCompat version**
+
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.SearchView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +57,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         permission();
 
     }
+
     public static final int PERMISSION_REQUEST_CODE = 1;
     static ArrayList<MusicFiles> musicFiles;
     static boolean shuffleBoolean = false, repeatBoolean = false;
-
     static ArrayList<MusicFiles> albums = new ArrayList<>();
     private String MY_SORT_PREF = "SortOrder";
+
+
+
+
     // Utility function to check if the current Android version is at least a given version
     public boolean isVersionAtLeast(int versionCode) {
         return Build.VERSION.SDK_INT >= versionCode;
@@ -257,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
         MenuItem menuItem = menu.findItem(R.id.search_option);
-        SearchView searchView = (SearchView) menuItem.getActionView();
+        SearchView searchView = (SearchView) menuItem.getActionView(); // Cast to AppCompat SearchView
         searchView.setOnQueryTextListener(this);
         return super.onCreateOptionsMenu(menu);
     }
