@@ -210,7 +210,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .setContentText(musicFiles.get(position).getArtist())
                 .addAction(R.drawable.ic_skip_previous, "Previous", prevPending)
 
-                //.addAction(android.R.drawable.ic_media_pause, "Pause", pausePending)
+                //.addAction(android.R.drawable.ic_, "Pause", pausePending)
                 .addAction(playPauseBtn, "Pause", pausePending)
                 .addAction(R.drawable.ic_skip_next, "Next", nextPending)
 

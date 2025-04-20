@@ -236,9 +236,16 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
                     handler.postDelayed(this,1000);
                 }
             });
+
+
+            if (musicService.isPlaying()) {
+                musicService.showNotification(R.drawable.ic_pause);
+                playPauseBtn.setBackgroundResource(R.drawable.ic_pause); // white for in-app
+            } else {
+                musicService.showNotification(R.drawable.ic_play);
+                playPauseBtn.setBackgroundResource(R.drawable.ic_play); // white for in-app
+            }
             musicService.OnCompleted();
-            musicService.showNotification(R.drawable.ic_play);
-            playPauseBtn.setBackgroundResource(R.drawable.ic_pause);
         }
     }
 
