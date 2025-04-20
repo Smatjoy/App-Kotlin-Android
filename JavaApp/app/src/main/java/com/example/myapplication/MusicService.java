@@ -29,6 +29,7 @@ import static com.example.myapplication.ApplicationClass.ACTION_NEXT;
 import static com.example.myapplication.ApplicationClass.ACTION_PLAY;
 import static com.example.myapplication.ApplicationClass.ACTION_PREVIOUS;
 import static com.example.myapplication.ApplicationClass.CHANNEL_ID_2;
+import static com.example.myapplication.ApplicationClass.SHUFFLE_ON;
 import static com.example.myapplication.PlayerActivity.listSongs;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
@@ -167,17 +168,22 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Intent intent = new Intent(this, PlayerActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_MUTABLE);
-
+        //Prev Button
         Intent prevIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PREVIOUS);
         PendingIntent prevPending = PendingIntent.getBroadcast(this, 0, prevIntent,
                 PendingIntent.FLAG_MUTABLE);
-
+        //Pause btn
         Intent pauseIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PLAY);
         PendingIntent pausePending = PendingIntent.getBroadcast(this, 0, pauseIntent,
                 PendingIntent.FLAG_MUTABLE);
-
+        //Shuffle btn
+        Intent shuffleIntent = new Intent(this, NotificationReceiver.class)
+                .setAction(SHUFFLE_ON);
+        PendingIntent shufflePending = PendingIntent.getBroadcast(this, 0, shuffleIntent,
+                PendingIntent.FLAG_MUTABLE);
+        //Next btn
         Intent nextIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_NEXT);
         PendingIntent nextPending = PendingIntent.getBroadcast(this, 0, nextIntent,
@@ -208,8 +214,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .setLargeIcon(thumb)
                 .setContentTitle(musicFiles.get(position).getTitle())
                 .setContentText(musicFiles.get(position).getArtist())
+                .addAction(R.drawable.ic_repeat_off, "Shuffle", shufflePending)
                 .addAction(R.drawable.ic_skip_previous, "Previous", prevPending)
-
                 //.addAction(android.R.drawable.ic_, "Pause", pausePending)
                 .addAction(playPauseBtn, "Pause", pausePending)
                 .addAction(R.drawable.ic_skip_next, "Next", nextPending)

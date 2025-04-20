@@ -11,6 +11,7 @@ public class ApplicationClass extends Application {
     public static final String ACTION_PREVIOUS = "actionprevious";
 
     public static final String ACTION_NEXT = "actionnext";
+    public static final String SHUFFLE_ON = "shuffleon";
     public static final String ACTION_PLAY = "actionplay";
 
     @Override

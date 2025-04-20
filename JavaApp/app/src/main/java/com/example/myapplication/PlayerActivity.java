@@ -237,7 +237,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
                 }
             });
 
-
+            //Check if song is playing change icon corresponding
             if (musicService.isPlaying()) {
                 musicService.showNotification(R.drawable.ic_pause);
                 playPauseBtn.setBackgroundResource(R.drawable.ic_pause); // white for in-app
@@ -385,6 +385,11 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
                 }
             });
         }
+    }
+
+    @Override
+    public void shuffleBtnClicked() {
+
     }
 
     private String formattedTime(int mCurrentPosition) {

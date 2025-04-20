@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 public interface ActionPlaying {
     void playPauseBtnClicked();
+    void shuffleBtnClicked();
     void nextBtnClicked();
     void prevBtnClicked();
 }
