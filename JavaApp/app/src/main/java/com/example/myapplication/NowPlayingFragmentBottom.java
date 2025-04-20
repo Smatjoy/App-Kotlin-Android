@@ -1,5 +1,9 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.MainActivity.PATH_TO_FRAG;
+import static com.example.myapplication.MainActivity.SHOW_MINI_PLAYER;
+
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.io.IOException;
 
 public class NowPlayingFragmentBottom extends Fragment {
 
@@ -35,6 +42,42 @@ public class NowPlayingFragmentBottom extends Fragment {
         playPauseBtn = view.findViewById(R.id.play_pause_miniPlayer);
         nextBtn = view.findViewById(R.id.skip_next_bottom);
 
+
         return view;
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (SHOW_MINI_PLAYER) {
+            byte [] art  = null;
+            try {
+                art = getAlbumArt(PATH_TO_FRAG);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (PATH_TO_FRAG !=null)  {
+                if (art !=null) {
+                    Glide.with(getContext())
+                            .load(art)
+                            .into(albumArt);
+                } else {
+                    Glide.with(getContext())
+                            .load(R.drawable.static_music)
+                            .into(albumArt);
+                }
+                songName.setText(PATH_TO_FRAG);
+
+            }
+        }
+    }
+
+    private byte[] getAlbumArt(String uri) throws IOException {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource( uri);
+        byte[] art = retriever.getEmbeddedPicture();
+        retriever.release();
+        return art;
     }
 }

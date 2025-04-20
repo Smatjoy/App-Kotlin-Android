@@ -40,6 +40,21 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
+    public static final int PERMISSION_REQUEST_CODE = 1;
+    static ArrayList<MusicFiles> musicFiles;
+    static boolean shuffleBoolean = false, repeatBoolean = false;
+    static ArrayList<MusicFiles> albums = new ArrayList<>();
+    private String MY_SORT_PREF = "SortOrder";
+
+    public static final String MUSIC_LAST_PLAYED = "LAST_PLAYED";
+    public static final String MUSIC_FILE = "STORED_MUSIC";
+
+    public static final String ARTIST_NAME = "ARTIST NAME";
+    public static final String SONG_NAME = "SONG NAME";
+    public static boolean SHOW_MINI_PLAYER = false;
+    public static String PATH_TO_FRAG = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +72,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         permission();
 
     }
-
-    public static final int PERMISSION_REQUEST_CODE = 1;
-    static ArrayList<MusicFiles> musicFiles;
-    static boolean shuffleBoolean = false, repeatBoolean = false;
-    static ArrayList<MusicFiles> albums = new ArrayList<>();
-    private String MY_SORT_PREF = "SortOrder";
-
 
 
 
@@ -199,8 +207,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    public  ArrayList<MusicFiles> getAllAudio (Context context)
-    {
+    public  ArrayList<MusicFiles> getAllAudio (Context context) {
         SharedPreferences preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
         String sortOrder = preferences.getString("sorting", "sortByName");
         ArrayList<String> duplicate = new ArrayList<>();
@@ -309,5 +316,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void onResume () {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences(MUSIC_LAST_PLAYED, MODE_PRIVATE);
+        String value = sharedPreferences.getString(MUSIC_FILE, null);
+        //If song is was playing show miniplayer
+        if (value != null) {
+            SHOW_MINI_PLAYER = true;
+            PATH_TO_FRAG = value;
+        } else {
+            SHOW_MINI_PLAYER = false;
+            PATH_TO_FRAG = null;
+        }
     }
 }
