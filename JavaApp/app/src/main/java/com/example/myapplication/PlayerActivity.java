@@ -482,7 +482,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
                 }
             });
         } else {
-            Glide.with(this)
+            Glide.with(this.getApplicationContext())
                     .asBitmap()
                     .load(R.drawable.static_music)
                     .into(cover_art);

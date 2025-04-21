@@ -75,21 +75,15 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             switch (actionName) {
                 case "playPause":
                     Toast.makeText(this, "PlayPause", Toast.LENGTH_SHORT).show();
-                    if (actionPlaying != null) {
-                        actionPlaying.playPauseBtnClicked();
-                    }
+                    playPauseBtnClicked();
                     break;
                 case "next":
                     Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show();
-                    if (actionPlaying != null) {
-                        actionPlaying.nextBtnClicked();
-                    }
+                    nextBtnClicked();
                     break;
                 case "previous":
                     Toast.makeText(this, "Previous", Toast.LENGTH_SHORT).show();
-                    if (actionPlaying != null) {
-                        actionPlaying.prevBtnClicked();
-                    }
+                    prevBtnClicked();
                     break;
             }
         }
@@ -245,5 +239,23 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         byte[] art = retriever.getEmbeddedPicture();
         retriever.release();
         return art;
+    }
+
+    void playPauseBtnClicked() {
+        if (actionPlaying != null) {
+            actionPlaying.playPauseBtnClicked();
+        }
+    }
+
+    void nextBtnClicked() {
+        if (actionPlaying != null) {
+            actionPlaying.nextBtnClicked();
+        }
+    }
+
+    void prevBtnClicked() {
+        if (actionPlaying != null) {
+            actionPlaying.prevBtnClicked();
+        }
     }
 }
