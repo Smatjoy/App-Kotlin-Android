@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,12 +16,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.media.session.MediaButtonReceiver;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,8 +51,72 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCreate() {
         super.onCreate();
-        mediaSessionCompat = new MediaSessionCompat(getBaseContext(), "My Audio");
+
+        mediaSessionCompat = new MediaSessionCompat(getApplicationContext(), "MyAudioSession");
+
+        // Collega i controlli esterni (cuffie, Bluetooth, ecc.)
+        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+        mediaButtonIntent.setClass(this, MediaButtonReceiver.class);
+        PendingIntent mediaButtonPendingIntent = PendingIntent.getBroadcast(
+                this, 0, mediaButtonIntent, PendingIntent.FLAG_IMMUTABLE
+        );
+        mediaSessionCompat.setMediaButtonReceiver(mediaButtonPendingIntent);
+
+        mediaSessionCompat.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public void onPlay() {
+                if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                    mediaPlayer.start();
+                    updatePlaybackState(PlaybackStateCompat.STATE_PLAYING);
+                    showNotification(R.drawable.ic_pause);
+                }
+            }
+
+            @Override
+            public void onPause() {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.pause();
+                    updatePlaybackState(PlaybackStateCompat.STATE_PAUSED);
+                    showNotification(R.drawable.ic_play);
+                }
+            }
+
+            @Override
+            public void onSkipToNext() {
+                if (actionPlaying != null) actionPlaying.nextBtnClicked();
+            }
+
+            @Override
+            public void onSkipToPrevious() {
+                if (actionPlaying != null) actionPlaying.prevBtnClicked();
+            }
+
+            @Override
+            public void onStop() {
+                stopSelf();
+            }
+        });
+
+        mediaSessionCompat.setActive(true);
+        updatePlaybackState(PlaybackStateCompat.STATE_PAUSED); // stato iniziale
     }
+
+
+    private void updatePlaybackState(int state) {
+        PlaybackStateCompat playbackState = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_SKIP_TO_NEXT |
+                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                                PlaybackStateCompat.ACTION_STOP
+                )
+                .setState(state, mediaPlayer != null ? mediaPlayer.getCurrentPosition() : 0, 1.0f)
+                .build();
+        mediaSessionCompat.setPlaybackState(playbackState);
+    }
+
 
     @Nullable
     @Override
@@ -163,6 +230,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         this.actionPlaying = actionPlaying;
     }
 
+    @SuppressLint("ForegroundServiceType")
     void showNotification(int playPauseBtn) {
         Intent intent = new Intent(this, PlayerActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent,
@@ -176,11 +244,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         Intent pauseIntent = new Intent(this, NotificationReceiver.class)
                 .setAction(ACTION_PLAY);
         PendingIntent pausePending = PendingIntent.getBroadcast(this, 0, pauseIntent,
-                PendingIntent.FLAG_MUTABLE);
-        //Shuffle btn
-        Intent shuffleIntent = new Intent(this, NotificationReceiver.class)
-                .setAction(SHUFFLE_ON);
-        PendingIntent shufflePending = PendingIntent.getBroadcast(this, 0, shuffleIntent,
                 PendingIntent.FLAG_MUTABLE);
         //Next btn
         Intent nextIntent = new Intent(this, NotificationReceiver.class)
@@ -213,10 +276,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .setLargeIcon(thumb)
                 .setContentTitle(musicFiles.get(position).getTitle())
                 .setContentText(musicFiles.get(position).getArtist())
-                .addAction(R.drawable.ic_repeat_off, "Shuffle", shufflePending)
                 .addAction(R.drawable.ic_skip_previous, "Previous", prevPending)
-                //.addAction(android.R.drawable.ic_, "Pause", pausePending)
-                .addAction(playPauseBtn, "Pause", pausePending)
+                //.addAction(android.R.drawable.ic_media_pause, "Pause", pausePending)
+                .addAction(R.drawable.ic_pause, "playPause", pausePending)
                 .addAction(R.drawable.ic_skip_next, "Next", nextPending)
 
                 //.setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
