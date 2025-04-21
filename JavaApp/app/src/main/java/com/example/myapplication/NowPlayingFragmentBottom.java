@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import static com.example.myapplication.MainActivity.ARTIST_TO_FRAG;
 import static com.example.myapplication.MainActivity.PATH_TO_FRAG;
 import static com.example.myapplication.MainActivity.SHOW_MINI_PLAYER;
+import static com.example.myapplication.MainActivity.SONG_NAME_TO_FRAG;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -41,7 +44,18 @@ public class NowPlayingFragmentBottom extends Fragment {
         albumArt = view.findViewById(R.id.bottom_album_art);
         playPauseBtn = view.findViewById(R.id.play_pause_miniPlayer);
         nextBtn = view.findViewById(R.id.skip_next_bottom);
-
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Next", Toast.LENGTH_SHORT).show();
+            }
+        });
+        playPauseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "PlayPause", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
 
@@ -67,8 +81,8 @@ public class NowPlayingFragmentBottom extends Fragment {
                             .load(R.drawable.static_music)
                             .into(albumArt);
                 }
-                songName.setText(PATH_TO_FRAG);
-
+                songName.setText(SONG_NAME_TO_FRAG);
+                artist.setText(ARTIST_TO_FRAG);
             }
         }
     }
