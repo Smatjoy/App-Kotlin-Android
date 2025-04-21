@@ -110,8 +110,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         mediaPlayer.start();
     }
     boolean isPlaying() {
-        return mediaPlayer.isPlaying();
+        if (mediaPlayer != null) {
+            return mediaPlayer.isPlaying();
+        }
+        return false;
     }
+
     void stop() {
         mediaPlayer.stop();
     }
