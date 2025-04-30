@@ -41,6 +41,8 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
     public static final String ARTIST_NAME = "ARTIST NAME";
     public static final String SONG_NAME = "SONG NAME";
 
+    private boolean isServiceBound = false;
+
     public NowPlayingFragmentBottom() {
         // Required empty public constructor
     }
@@ -131,6 +133,31 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
     @Override
     public void onResume() {
         super.onResume();
+        if (SHOW_MINI_PLAYER && getContext() != null) {
+            byte[] art = null;
+            try {
+                art = getAlbumArt(PATH_TO_FRAG);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (PATH_TO_FRAG != null) {
+                if (art != null) {
+                    Glide.with(getContext())
+                            .load(art)
+                            .into(albumArt);
+            } else {
+                    Glide.with(getContext())
+                            .load(R.drawable.static_music)
+                            .into(albumArt);
+                }
+                songName.setText(SONG_NAME_TO_FRAG);
+                artist.setText(ARTIST_TO_FRAG);
+            }
+            //Se il contesto è valido faccio il bind
+            Intent intent = new Intent(getContext(), MusicService.class);
+            getContext().bindService(intent, this, Context.BIND_AUTO_CREATE);
+            isServiceBound = true;
+        }
         if (SHOW_MINI_PLAYER) {
             byte [] art  = null;
             try {
@@ -161,8 +188,13 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
     @Override
     public void onPause() {
         super.onPause();
-        if (getContext() != null) {
-            getContext().unbindService(this);
+        if (getContext() != null && isServiceBound) {
+            try {
+                getContext().unbindService(this);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace(); // fallback di sicurezza
+            }
+            isServiceBound = false;
         }
     }
 
