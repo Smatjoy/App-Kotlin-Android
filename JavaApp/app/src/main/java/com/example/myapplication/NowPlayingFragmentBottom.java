@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,6 +124,20 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
                         playPauseBtn.setImageResource(R.drawable.ic_play);
                     }
                 }
+            }
+        });
+
+        RelativeLayout cardBottomPlayer = view.findViewById(R.id.card_bottom_player);
+
+        // Escludi clic su play/pausa e skip_next
+        cardBottomPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), PlayerActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("position", musicService.position);  // passa la posizione
+                intent.putExtra("sender", "miniPlayer");
+                startActivity(intent);
             }
         });
 
