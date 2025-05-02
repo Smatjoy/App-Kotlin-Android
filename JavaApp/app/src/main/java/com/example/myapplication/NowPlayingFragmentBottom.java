@@ -63,7 +63,7 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Next", Toast.LENGTH_SHORT).show();
-                if (musicService != null) {
+                if (musicService.musicFiles != null && !musicService.musicFiles.isEmpty() && musicService.position >= 0) {
                     musicService.nextBtnClicked();
                     if (getActivity() != null) {
                         SharedPreferences.Editor editor = getActivity().getSharedPreferences(MUSIC_LAST_PLAYED, MODE_PRIVATE).edit();
@@ -128,8 +128,6 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
         });
 
         RelativeLayout cardBottomPlayer = view.findViewById(R.id.card_bottom_player);
-
-        // Escludi clic su play/pausa e skip_next
         cardBottomPlayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
