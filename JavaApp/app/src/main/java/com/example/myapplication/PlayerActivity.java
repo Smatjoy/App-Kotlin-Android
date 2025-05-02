@@ -142,6 +142,17 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
                 }
             }
         });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlayerActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                finish(); // opzionale, chiude la PlayerActivity
+            }
+        });
+
     }
 
     private void setFulScreen() {
