@@ -62,7 +62,7 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Next", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Next", Toast.LENGTH_SHORT).show();
                 if (musicService.musicFiles != null && !musicService.musicFiles.isEmpty() && musicService.position >= 0) {
                     musicService.nextBtnClicked();
                     if (getActivity() != null) {
@@ -115,7 +115,7 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "PlayPause", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "PlayPause", Toast.LENGTH_SHORT).show();
                 if (musicService != null) {
                     musicService.playPauseBtnClicked();
                     if (musicService.isPlaying()) {
