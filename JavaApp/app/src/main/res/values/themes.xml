@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+            <!-- Base AppCompat theme -->
+            <style name="Base.Theme.MyApplication" parent="Theme.AppCompat.Light.DarkActionBar">
+                <item name="colorPrimary">@color/colorPrimary</item>
+                <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+                <item name="colorAccent">@color/colorAccent</item>
+                <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryDark</item>
+            </style>
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <!-- Devo cambiarlo da Base.Theme.MyApplication a Theme.AppCompat.Light.NoActionBar, altrimenti crasha-->
+    <style name="Theme.MyApplication" parent="Theme.AppCompat.Light.NoActionBar" />
+</resources>
