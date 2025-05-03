@@ -1,5 +1,6 @@
 # Media Player made in Java in Android Studio
 ![Media Player App](./screenshots/icon.png "Media Player Icon")
+
 # 🎵 Java Media Player Application
 
 A modern and intuitive Media Player application built with **Java**, designed to provide a clean and functional music playback experience. Browse albums, search and filter songs, and enjoy your favorite tracks with ease.
@@ -19,41 +20,44 @@ A modern and intuitive Media Player application built with **Java**, designed to
 ### 🏠 Main Screen
 Shows the home interface with a list of recently played or available songs.
 
-![Main Screen](screenshots/main_screen.png)
+<img src="screenshots/main_screen.png" alt="Main Screen" width="400">
 
 ---
 
 ### 🎧 Media Player
 Includes full playback controls and current track info.
 
-![Media Player](screenshots/media_player.png)
+<img src="screenshots/media_player.png" alt="Media Player" width="400">
 
 ---
 
 ### 💿 Album View
 Displays all albums found in the media library.
 
-![Album Screen](screenshots/album_view.png)
+<img src="screenshots/album_view.png" alt="Album Screen" width="400">
 
 ---
 
 ### 📂 Album Detail
 Shows all the songs belonging to a selected album.
 
-![Album Detail](screenshots/album_detail.png)
+<img src="screenshots/album_detail.png" alt="Album Detail" width="400">
 
 ---
 
 ### 🔎 Search and Filter
 Search and filter songs in real-time by title, artist, or album.
 
-![Search Filter](screenshots/search.png)
+<img src="screenshots/search.png" alt="Search Filter" width="400">
+
 *You can search every song by its name*
 
-![Search Filter](screenshots/filter1.png)
+<img src="screenshots/filter1.png" alt="Filter by Name, Date, and Size" width="400">
+
 *You can filter by Name, Date and Size*
 
-![Search Filter](screenshots/filter2.png)
+<img src="screenshots/filter2.png" alt="Filtered by Size" width="400">
+
 *Filtered by Size*
 
 ---
