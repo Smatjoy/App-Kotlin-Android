@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -56,8 +57,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static String ARTIST_TO_FRAG = null;
     public static String SONG_NAME_TO_FRAG = null;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +71,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setSupportActionBar(toolbar);
 
         permission();
-
     }
-
-
 
     // Utility function to check if the current Android version is at least a given version
     public boolean isVersionAtLeast(int versionCode) {
@@ -101,8 +97,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 // Permissions granted at install time
                 Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
-                initViewPager();
-
+                restartActivity();
             }
 
             // Android 6 to 12 (API 23 to 32)
@@ -123,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
                 initViewPager();
-
             }
 
             // Android 5 and below — no runtime permission required
@@ -134,31 +128,54 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //something
+            // Check if all permissions were granted
+            boolean allPermissionsGranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    allPermissionsGranted = false;
+                    break;
+                }
+            }
+            if (allPermissionsGranted) {
+                // All permissions granted
+                restartActivity();
             } else {
-                if (isVersionAtLeast(Build.VERSION_CODES.M)) {
-                    ActivityCompat.requestPermissions(
-                            this,
-                            new String[]{
-                                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                            },
-                            PERMISSION_REQUEST_CODE // your request code
-                    );
-                } else if (isVersionAtLeast(Build.VERSION_CODES.TIRAMISU)) {
-                    ActivityCompat.requestPermissions(
-                            this,
-                            new String[]{
-                                    Manifest.permission.READ_MEDIA_AUDIO,
-                                    Manifest.permission.READ_MEDIA_IMAGES,
-                            },
-                            PERMISSION_REQUEST_CODE // your request code
-                    );
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //something
+                } else {
+                    // At least one permission was denied
+                    Toast.makeText(this, "Permission denied! App needs storage access to function properly.", Toast.LENGTH_LONG).show();
+
+                    // You can request again if needed
+                    if (isVersionAtLeast(Build.VERSION_CODES.TIRAMISU)) {
+                        ActivityCompat.requestPermissions(
+                                this,
+                                new String[]{
+                                        Manifest.permission.READ_MEDIA_AUDIO,
+                                        Manifest.permission.READ_MEDIA_IMAGES
+                                },
+                                PERMISSION_REQUEST_CODE
+                        );
+                    } else if (isVersionAtLeast(Build.VERSION_CODES.M)) {
+                        ActivityCompat.requestPermissions(
+                                this,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                },
+                                PERMISSION_REQUEST_CODE
+                        );
+                    }
                 }
             }
         }
     }
 
+    private void restartActivity() {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
+    }
 
     //Initialize viewpager
     private void initViewPager () {
