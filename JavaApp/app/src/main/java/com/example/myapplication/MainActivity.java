@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 // Permissions granted at install time
                 Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
-                restartActivity();
+                //restartActivity();
+                initViewPager();
             }
-
             // Android 6 to 12 (API 23 to 32)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
@@ -125,48 +125,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
-    public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            // Check if all permissions were granted
             boolean allPermissionsGranted = true;
-            for (int grantResult : grantResults) {
-                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
                     allPermissionsGranted = false;
                     break;
                 }
             }
+
             if (allPermissionsGranted) {
-                // All permissions granted
+                Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show();
                 restartActivity();
             } else {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //something
-                } else {
-                    // At least one permission was denied
-                    Toast.makeText(this, "Permission denied! App needs storage access to function properly.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Permission denied! App needs storage access to function properly.", Toast.LENGTH_LONG).show();
 
-                    // You can request again if needed
-                    if (isVersionAtLeast(Build.VERSION_CODES.TIRAMISU)) {
-                        ActivityCompat.requestPermissions(
-                                this,
-                                new String[]{
-                                        Manifest.permission.READ_MEDIA_AUDIO,
-                                        Manifest.permission.READ_MEDIA_IMAGES
-                                },
-                                PERMISSION_REQUEST_CODE
-                        );
-                    } else if (isVersionAtLeast(Build.VERSION_CODES.M)) {
-                        ActivityCompat.requestPermissions(
-                                this,
-                                new String[]{
-                                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                },
-                                PERMISSION_REQUEST_CODE
-                        );
-                    }
-                }
+                // Optional: Guide user to settings instead of spamming permission request
+                // You can re-request here, but better to show rationale or navigate to settings
             }
         }
     }
