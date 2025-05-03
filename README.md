@@ -1,5 +1,5 @@
 # Media Player made in Java in Android Studio
-![Media Player App](./media/icon.png "Media Player Icon")
+![Media Player App](./screenshots/icon.png "Media Player Icon")
 # 🎵 Java Media Player Application
 
 A modern and intuitive Media Player application built with **Java**, designed to provide a clean and functional music playback experience. Browse albums, search and filter songs, and enjoy your favorite tracks with ease.
