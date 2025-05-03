@@ -110,6 +110,9 @@ public class NowPlayingFragmentBottom extends Fragment implements ServiceConnect
                         }
                     }
                 }
+                else {
+                    Toast.makeText(getContext(), "No more songs", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         playPauseBtn.setOnClickListener(new View.OnClickListener() {
